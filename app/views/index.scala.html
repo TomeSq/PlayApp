@@ -1,7 +1,16 @@
-@(message: String)
+@(msg: String, form1: Form[Application.SampleForm])
 
-@main("Welcome to Play") {
+@main("Sample Page") {
 
-    @play20.welcome(message, style = "Java")
+    <h1>Hello!</h1>
+    <p>@msg</p>
+    @helper.form(action = routes.Application.send){
+      @(helper.inputText(
+        field = form1("message")
+      ))
+      
+      <input type="submit">
+      
+    }
 
 }
