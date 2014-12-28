@@ -1,7 +1,13 @@
-@(message: String)
+@(one: String, two: String, three: String)
 
-@main("Welcome to Play") {
+@main("Sample Page") {
 
-    @play20.welcome(message, style = "Java")
+    <h1>Hello!</h1>
+    <p>これは、サンプルで作ったページです。</p>
+    <oi>
+        <li>@one</li>
+        <li>@two</li>
+        <li>@three</li>
+    </oi>
 
 }
