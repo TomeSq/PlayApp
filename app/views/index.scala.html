@@ -1,6 +1,9 @@
-@(msg: String)
+@(msg: String, datas: List[Message])
 
 @main("Sample Page") {
     <h1>Hello!</h1>
     <p>@msg</p>
+    <pre>@datas</pre>
 }
+
+
