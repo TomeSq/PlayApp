@@ -1,2 +1,2 @@
-PlayTest
+PlayApp
 ========
