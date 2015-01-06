@@ -5,6 +5,7 @@ import java.util.List;
 import models.Message;
 import play.*;
 import play.data.*;
+import play.data.validation.Constraints.Required;
 import play.mvc.*;
 import views.html.*;
 
@@ -92,5 +93,28 @@ public class Application extends Controller {
 		} else {
 			return ok(item.render("ERROR:入力に問題があります。", f));
 		}
+	}
+
+	// /findにアクセスした際のAction
+	public static Result find() {
+		Form<FindForm> f = new Form(FindForm.class).bindFromRequest();
+		List<Message> datas = null;
+		if (!f.hasErrors()) {
+			String input = f.get().input;
+			// datas = Message.find.where().eq("name", input).findList(); // 完全一致
+			datas = Message.find.where().like("name", "%" + input + "%").orderBy("id desc").findList(); // 含まれている
+
+			//*** 複数検索 start ***
+			//			String[] arr = input.split(",");
+			//			datas = Message.find.where().in("name", arr).findList();
+			//*** end***
+		}
+		return ok(find.render("投稿の検索", f, datas));
+	}
+
+	// Finder用の内部クラス
+	public static class FindForm {
+		@Required
+		public String input;
 	}
 }
