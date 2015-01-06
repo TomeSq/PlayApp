@@ -70,4 +70,27 @@ public class Application extends Controller {
 		}
 	}
 
+	// /delにアクセスした際のAction
+	public static Result delete() {
+		Form<Message> f = new Form(Message.class);
+		return ok(delete.render("削除するID番号", f));
+	}
+
+	// /removeにアクセスした際のAction
+	public static Result remove() {
+		Form<Message> f = new Form(Message.class).bindFromRequest();
+		if (!f.hasErrors()) {
+			Message obj = f.get();
+			Long id = obj.id;
+			obj = Message.find.byId(id);
+			if (obj != null) {
+				obj.delete();
+				return redirect("/");
+			} else {
+				return ok(item.render("ERROR:そのID番号は見つかりません。", f));
+			}
+		} else {
+			return ok(item.render("ERROR:入力に問題があります。", f));
+		}
+	}
 }
