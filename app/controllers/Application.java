@@ -101,9 +101,16 @@ public class Application extends Controller {
 		List<Message> datas = null;
 		if (!f.hasErrors()) {
 			String input = f.get().input;
-			// datas = Message.find.where().eq("name", input).findList(); // 完全一致
-			datas = Message.find.where().like("name", "%" + input + "%").orderBy("id desc")
-					.findPagingList(10).getPage(0).getList(); // 含まれている
+			// 完全一致
+			// datas = Message.find.where().eq("name", input).findList();
+
+			// 含まれている
+			// datas = Message.find.where().like("name", "%" + input + "%").orderBy("id desc")
+			// .findPagingList(10).getPage(0).getList();
+
+			// RAW検索
+			String q = "name like '%" + input + "%'";
+			datas = Message.find.where().raw(q).orderBy("id desc").findList();
 
 			//*** 複数検索 start ***
 			//			String[] arr = input.split(",");
