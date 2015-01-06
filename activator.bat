@@ -9,6 +9,8 @@
 
 @echo off
 
+set JAVA_HOME=D:\pleiades\java\8
+
 set "var1=%~1"
 if defined var1 (
   if "%var1%"=="help" (
