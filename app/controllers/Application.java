@@ -110,11 +110,12 @@ public class Application extends Controller {
 
 			// RAW検索
 			String q = "name like '%" + input + "%'";
-			datas = Message.find.where().raw(q).orderBy("id desc").findList();
+			//datas = Message.find.where().raw(q).orderBy("id desc").findList();
+			datas = Message.find.where(q).orderBy("id desc").findList();
 
 			//*** 複数検索 start ***
-			//			String[] arr = input.split(",");
-			//			datas = Message.find.where().in("name", arr).findList();
+			//String[] arr = input.split(",");
+			//datas = Message.find.where().in("name", arr).findList();
 			//*** end***
 		}
 		return ok(find.render("投稿の検索", f, datas));
