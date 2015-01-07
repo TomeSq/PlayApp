@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import play.data.validation.Constraints.MaxLength;
@@ -31,13 +32,12 @@ public class Message extends Model {
 	@Required(message="必須項目です。")
 	@MinLength(5)
 	@MaxLength(1024)
-	@Pattern(message="半角英数字のみにしてください。", value="[a-zA-Z0-9]+")
 	public String message;
 
 	@CreatedTimestamp
 	public Date postdate;
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.ALL)
 	public Member member;
 
 	public static Finder<Long, Message> find = new Finder<Long, Message>(

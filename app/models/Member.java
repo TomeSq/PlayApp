@@ -1,7 +1,12 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
@@ -26,12 +31,22 @@ public class Member extends Model {
 	@Pattern(message="半角数値のみで記入してください。(-[ハイフン]不要)", value="[0-9]+")
 	public String tel;
 
+	@OneToMany(cascade=CascadeType.ALL)
+	public List<Message> messages = new ArrayList<Message>();
+
 	public static Finder<Long, Member> find = new Finder<Long, Member>(
 			Long.class, Member.class);
 
 	@Override
 	public String toString() {
-		return ("[id" + id + ", name:" + name + ", mail:" + mail +
+		String ids = "{id:";
+		for(Message m: messages){
+			ids += " " + m.id;
+		}
+		ids += "}";
+
+		return ("[id" + id + ", message:" + ids +
+				", name:" + name + ", mail:" + mail +
 				", tel:" + tel + "]");
 	}
 
