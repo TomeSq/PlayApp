@@ -1,10 +1,49 @@
-@(msg: String)
+@(msg: String, form1: Form[Application.SampleForm])
+@import helper._
 
 @main("Sample Page") {
     <h1>Hello!</h1>
     <p>@msg</p>
-    <form action="/" method="post">
-        <input type="text" name="input">
+
+    @form(action=routes.Application.send){
+        @(inputText(
+            field=form1("number"),
+            args='type->"number",
+                 'min->10, 'max->100
+        ))
+        @(inputText(
+            field=form1("input"),
+            args='size->30
+        ))
+        @(inputPassword(
+            field=form1("pass"),
+            args='size->30
+        ))
+        @(checkbox(
+            field=form1("check")
+        ))
+        @(inputRadioGroup(
+            field=form1("radio"),
+            options=Seq("windows"->"MS-Windows",
+                        "mac"->"Mac OS X",
+                        "linux"->"Linux")
+            )
+        )
+        @(select(
+            field=form1("sel"),
+            options=Seq("jp"->"日本",
+                        "us"->"米国",
+                        "uk"->"英国"),
+            args='size->3
+        ))
+        @(textarea(
+            field=form1("area"),
+            args='cols->30, 'row->3
+        ))
+        @(inputDate(
+            field=form1("date")
+        ))
+
         <input type="submit">
-    </form>
+    }
 }
