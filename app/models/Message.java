@@ -10,7 +10,11 @@ import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Pattern;
 import play.data.validation.Constraints.Required;
+import play.data.validation.Constraints.ValidateWith;
+import play.data.validation.Constraints.Validator;
 import play.db.ebean.Model;
+import play.libs.F;
+import play.libs.F.Tuple;
 
 import com.avaje.ebean.annotation.CreatedTimestamp;
 
@@ -19,18 +23,19 @@ public class Message extends Model {
 	@Id
 	public Long id;
 
-	@Required
+	@Required(message="必須項目です。")
 	@MinLength(5)
 	@MaxLength(255)
 	public String name;
 
-	@Email
+	@Email(message="メールアドレスを記入してください。")
 	public String mail;
 
-	@Required
+	@Required(message="必須項目です。")
 	@MinLength(5)
 	@MaxLength(1024)
-	@Pattern("[a-zA-Z]+")
+	@Pattern(message="半角英数字のみにしてください。", value="[a-zA-Z0-9]+")
+	@ValidateWith(value=IsUrl.class, message="URLではじまるメッセージを記述ください。")
 	public String message;
 
 	@CreatedTimestamp
@@ -44,4 +49,20 @@ public class Message extends Model {
 		return ("[id" + id + ", name:" + name + ", mail:" + mail + ", message:"
 				+ message + ", date:" + postdate + "]");
 	}
+
+	// 独自バリデーション
+	public static class IsUrl extends Validator<String>{
+
+		@Override
+		public boolean isValid(String s) {
+			return s.toLowerCase().startsWith("http://");
+		}
+
+		@Override
+		public Tuple<String, Object[]> getErrorMessageKey() {
+			return new F.Tuple<String, Object[]>("error.isvalid", new String[]{});
+		}
+	}
+
+
 }
