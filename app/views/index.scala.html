@@ -1,17 +1,10 @@
-@* index Template File *@
 @(msg: String)
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>sample</title>
-        <link rel="stylesheet" media="screen"
-            href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png"
-            href="@routes.Assets.at("images/favicon.png")">
-    </head>
-    <body>
-        <h1>Hello!</h1>
-        <p>@msg</p>
-    </body>
-</html>
+@main("Sample Page") {
+    <h1>Hello!</h1>
+    <p>@msg</p>
+    <form action="/" method="post">
+        <input type="text" name="input">
+        <input type="submit">
+    </form>
+}
