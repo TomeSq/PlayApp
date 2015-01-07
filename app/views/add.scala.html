@@ -1,15 +1,22 @@
-@(msg: String, form1: Form[models.Message])
+@(msg: String, form1: Form[models.Message], mems: List[models.Member])
 
 @main("Sample Page") {
     <h1>ADD MESSAGE</h1>
     <p>@msg</p>
     @helper.form(action = routes.Application.create){
-	    @(helper.inputText(
-	        field = form1("name")
-	    ))
+        <dl class=" " id="name_field">
+        <dt><label for="name">name</label></dt>
+        <dd>
+            <select id="name_firld" name="name">
+            @for(mem <- mems){
+                <option>@mem.name</option>
+            }
+            </select>
+        </dd>
         @(helper.textarea(
-            field = form1("message")
+            field=form1("message")
         ))
+
         <input type="submit">
     }
 }

@@ -23,11 +23,13 @@ public class Application extends Controller {
 	// 新規投稿フォームのAction
 	public static Result add() {
 		Form<Message> f = new Form(Message.class);
-		return ok(add.render("投稿フォーム", f));
+		List<Member> mems =Member.find.select("name").findList();
+		return ok(add.render("投稿フォーム", f, mems));
 	}
 
 	// /createにアクセスした際のAction
 	public static Result create() {
+		/*
 		Form<Message> f = new Form(Message.class).bindFromRequest();
 		if (!f.hasErrors()) {
 			Message data = f.get();
@@ -37,6 +39,8 @@ public class Application extends Controller {
 		} else {
 			return badRequest(add.render("ERROR", f));
 		}
+		*/
+		return redirect("/");
 	}
 
 	// Membet Action =================
