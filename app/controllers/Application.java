@@ -2,22 +2,24 @@ package controllers;
 
 import java.util.List;
 
-import models.Message;
-import play.*;
-import play.data.*;
-import play.data.validation.Constraints.Required;
-import play.mvc.*;
 import views.html.*;
+import models.Member;
+import models.Message;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 public class Application extends Controller {
 
 	// ルートにアクセスした際のAction
 	public static Result index() {
-		List<Message> datas = Message.find.all();
-		return ok(index.render("データベースのサンプル", datas));
+		List<Message> datas  = Message.find.all();
+		List<Member>  datas2 = Member.find.all();
+		return ok(index.render("データベースのサンプル", datas, datas2));
 	}
 
-	// 新規作成フォームのAction
+	// Message Action =================
+	// 新規投稿フォームのAction
 	public static Result add() {
 		Form<Message> f = new Form(Message.class);
 		return ok(add.render("投稿フォーム", f));
@@ -28,6 +30,7 @@ public class Application extends Controller {
 		Form<Message> f = new Form(Message.class).bindFromRequest();
 		if (!f.hasErrors()) {
 			Message data = f.get();
+			data.member = Member.findByName(data.name);
 			data.save();
 			return redirect("/");
 		} else {
@@ -35,95 +38,22 @@ public class Application extends Controller {
 		}
 	}
 
-	// /itemにアクセスした際のAction
-	public static Result setitem() {
-		Form<Message> f = new Form(Message.class);
-		return ok(item.render("ID番号を入力。", f));
+	// Membet Action =================
+	// メンバー作成フォームのAction
+	public static Result add2() {
+		Form<Member> f = new Form(Member.class);
+		return ok(add2.render("メンバー登録フォーム", f));
 	}
 
-	// /editにアクセスした際のAction
-	public static Result edit() {
-		Form<Message> f = new Form(Message.class).bindFromRequest();
+	// /create2にアクセスした際のAction
+	public static Result create2() {
+		Form<Member> f = new Form(Member.class).bindFromRequest();
 		if (!f.hasErrors()) {
-			Message obj = f.get();
-			Long id = obj.id;
-			obj = Message.find.byId(id);
-			if (obj != null) {
-				f = new Form(Message.class).fill(obj);
-				return ok(edit.render("ID=" + id + "の投稿を編集。", f));
-			} else {
-				return ok(item.render("ERROR:IDの投稿が見つかりません。", f));
-			}
-		} else {
-			return ok(item.render("ERROR:入力に問題があります。", f));
-		}
-	}
-
-	// /updateにアクセスした際のAction
-	public static Result update() {
-		Form<Message> f = new Form(Message.class).bindFromRequest();
-		if (!f.hasErrors()) {
-			Message date = f.get();
-			date.update();
+			Member data = f.get();
+			data.save();
 			return redirect("/");
 		} else {
-			return ok(item.render("ERROR:再度入力してください・", f));
+			return badRequest(add2.render("ERROR", f));
 		}
-	}
-
-	// /delにアクセスした際のAction
-	public static Result delete() {
-		Form<Message> f = new Form(Message.class);
-		return ok(delete.render("削除するID番号", f));
-	}
-
-	// /removeにアクセスした際のAction
-	public static Result remove() {
-		Form<Message> f = new Form(Message.class).bindFromRequest();
-		if (!f.hasErrors()) {
-			Message obj = f.get();
-			Long id = obj.id;
-			obj = Message.find.byId(id);
-			if (obj != null) {
-				obj.delete();
-				return redirect("/");
-			} else {
-				return ok(item.render("ERROR:そのID番号は見つかりません。", f));
-			}
-		} else {
-			return ok(item.render("ERROR:入力に問題があります。", f));
-		}
-	}
-
-	// /findにアクセスした際のAction
-	public static Result find() {
-		Form<FindForm> f = new Form(FindForm.class).bindFromRequest();
-		List<Message> datas = null;
-		if (!f.hasErrors()) {
-			String input = f.get().input;
-			// 完全一致
-			// datas = Message.find.where().eq("name", input).findList();
-
-			// 含まれている
-			// datas = Message.find.where().like("name", "%" + input + "%").orderBy("id desc")
-			// .findPagingList(10).getPage(0).getList();
-
-			// RAW検索
-			String q = "name like '%" + input + "%'";
-			//datas = Message.find.where().raw(q).orderBy("id desc").findList();
-			datas = Message.find.where(q).orderBy("id desc").findList();
-
-			//*** 複数検索 start ***
-			//String[] arr = input.split(",");
-			//datas = Message.find.where().in("name", arr).findList();
-			//*** end***
-		}
-		return ok(find.render("投稿の検索", f, datas));
-	}
-
-	// Finder用の内部クラス
-	public static class FindForm {
-		@Required
-		public String input;
 	}
 }

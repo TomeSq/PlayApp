@@ -2,15 +2,15 @@ package models;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
-import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Pattern;
 import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
 import play.data.validation.Constraints.Validator;
 import play.db.ebean.Model;
 import play.libs.F;
@@ -28,26 +28,30 @@ public class Message extends Model {
 	@MaxLength(255)
 	public String name;
 
-	@Email(message="メールアドレスを記入してください。")
-	public String mail;
-
 	@Required(message="必須項目です。")
 	@MinLength(5)
 	@MaxLength(1024)
 	@Pattern(message="半角英数字のみにしてください。", value="[a-zA-Z0-9]+")
-	@ValidateWith(value=IsUrl.class, message="URLではじまるメッセージを記述ください。")
 	public String message;
 
 	@CreatedTimestamp
 	public Date postdate;
+
+	@OneToOne(cascade=CascadeType.ALL)
+	public Member member;
 
 	public static Finder<Long, Message> find = new Finder<Long, Message>(
 			Long.class, Message.class);
 
 	@Override
 	public String toString() {
-		return ("[id" + id + ", name:" + name + ", mail:" + mail + ", message:"
-				+ message + ", date:" + postdate + "]");
+		return ("[id" + id + ", member:<" + member.name + "," +
+				member.mail + ">, message:" + message +
+				", date:" + postdate + "]");
+	}
+
+	public static Message findByName(String input){
+		return Message.find.where().eq("name", input).findList().get(0);
 	}
 
 	// 独自バリデーション
