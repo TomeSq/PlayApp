@@ -7,7 +7,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 public class Application extends Controller {
-	public static Result index(){
-		return ok(index.render("これはテンプレートのテストです。"));
+	// ルートにアクセスした際のAction
+	public static Result index(String msg, int id){
+		return ok(index.render("引数は、" + msg + "," + id + "です。"));
 	}
 }
