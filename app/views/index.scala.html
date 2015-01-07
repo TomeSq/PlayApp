@@ -1,19 +1,23 @@
-@(msg: String, form1: Form[Application.SampleForm])
+@(msg: String, msgs: List[models.Message])
 @import helper._
 
 @main("Sample Page") {
     <h1>Hello!</h1>
     <p>@msg</p>
 
-    @form(action=routes.Application.send){
-        @repeat(
-            field=form1("inputs"), min=3
-        ){fld=>
-            @inputText(
-                field=fld, '_label->"input"
-            )
-        }
-
-        <input type="submit">
+    <table>
+    <tr>
+        <th>id</th>
+        <th>Name</th>
+        <th>Message</th>
+    </tr>
+    @for(msg<-msgs){
+        <tr>
+            <td>@msg.id</td>
+            <td>@msg.name</td>
+            <td>@msg.message</td>
+        </tr>
     }
+    </table>
+
 }
