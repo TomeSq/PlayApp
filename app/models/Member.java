@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import play.data.validation.Constraints.Email;
@@ -31,7 +32,7 @@ public class Member extends Model {
 	@Pattern(message="半角数値のみで記入してください。(-[ハイフン]不要)", value="[0-9]+")
 	public String tel;
 
-	@OneToMany(cascade=CascadeType.ALL)
+	@ManyToMany
 	public List<Message> messages = new ArrayList<Message>();
 
 	public static Finder<Long, Member> find = new Finder<Long, Member>(
