@@ -13,11 +13,15 @@
         ))
         @(inputText(
             field=form1("input"),
-            args='size->30
+            args='_label->"Your Name:",
+	            '_help->"名前を書いてください",
+	            'size->30
         ))
         @(inputPassword(
             field=form1("pass"),
-            args='size->30
+            args='_label->"Password:",
+	            '_help->"パスワードを書いてください",
+	            'size->30
         ))
         @(checkbox(
             field=form1("check")
