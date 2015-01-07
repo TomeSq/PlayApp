@@ -8,6 +8,6 @@ import play.mvc.Result;
 
 public class Application extends Controller {
 	public static Result index(){
-		return ok("<HTML> <body> <h1>HELLO!</h1> <p>This is test.</p> </body> </HTML>").as("text/html");
+		return ok(index.render("これはテンプレートのテストです。"));
 	}
 }
