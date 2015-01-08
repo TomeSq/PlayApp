@@ -36,66 +36,11 @@ public class Application extends Controller {
 		return ok(index.render("please set form.", msgs));
 	}
 
-	// JSONデータの作成
-	public static Result ajax(){
-		String input = request().body().asFormUrlEncoded().get("input")[0];
-		Member mem = Member.findByName(input);
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		String str = "<xml><root><err>ERROR!</err></root>";
-		Document doc = null;
-		try{
-			doc = factory.newDocumentBuilder().newDocument();
-			Element root = doc.createElement("data");
-
-			// name情報の設定
-			Element el = doc.createElement("name");
-			el.appendChild(doc.createTextNode(mem.name));
-			root.appendChild(el);
-
-			// mail情報の設定
-			el = doc.createElement("mail");
-			el.appendChild(doc.createTextNode(mem.mail));
-			root.appendChild(el);
-
-			// tal情報の設定
-			el = doc.createElement("tel");
-			el.appendChild(doc.createTextNode(mem.tel));
-			root.appendChild(el);
-
-			doc.appendChild(root);
-			TransformerFactory tfactory = TransformerFactory.newInstance();
-			StringWriter writer = new StringWriter();
-			StreamResult stream = new StreamResult(writer);
-			Transformer trans = tfactory.newTransformer();
-			trans.transform(new DOMSource(doc.getDocumentElement()), stream);
-			str = stream.getWriter().toString();
-		} catch(ParserConfigurationException e){
-			e.printStackTrace();
-		} catch(TransformerConfigurationException e){
-			e.printStackTrace();
-		} catch(TransactionException e){
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			e.printStackTrace();
-		}
-
-		if(doc == null){
-			return badRequest(str);
-		} else{
-			return ok(str);
-		}
-	}
-
 	// Message Action =================
 	// 新規投稿フォームのAction
 	public static Result add() {
 		Form<Message> f = new Form<Message>(Message.class);
-		List<Member> mems = Member.find.select("name").findList();
-		List<Tuple2<String,String>> opts = new ArrayList<Tuple2<String,String>>();
-		for(Member mem : mems){
-			opts.add(new Tuple2<String, String>(mem.name, mem.name));
-		}
-		return ok(add.render("投稿フォーム", f, opts));
+		return ok(add.render("投稿フォーム", f));
 	}
 
 	// /createにアクセスした際のAction
@@ -107,8 +52,7 @@ public class Application extends Controller {
 			data.save();
 			return redirect("/");
 		} else {
-//			return badRequest(add.render("ERROR", f));
-			return redirect("/");
+			return badRequest(add.render("ERROR", f));
 		}
 	}
 

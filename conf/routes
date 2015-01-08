@@ -8,7 +8,6 @@ GET     /add                        controllers.Application.add()
 POST    /create                     controllers.Application.create()
 GET     /add2                       controllers.Application.add2()
 POST    /create2                    controllers.Application.create2()
-POST    /ajax                       controllers.Application.ajax()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
