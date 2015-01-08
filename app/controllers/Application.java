@@ -24,7 +24,7 @@ public class Application extends Controller {
 	// 新規投稿フォームのAction
 	public static Result add() {
 		Form<Message> f = new Form<Message>(Message.class);
-		List<Member> mems =Member.find.select("name").findList();
+		List<Member> mems = Member.find.select("name").findList();
 		List<Tuple2<String,String>> opts = new ArrayList<Tuple2<String,String>>();
 		for(Member mem : mems){
 			opts.add(new Tuple2<String, String>(mem.name, mem.name));
@@ -34,7 +34,6 @@ public class Application extends Controller {
 
 	// /createにアクセスした際のAction
 	public static Result create() {
-		/*
 		Form<Message> f = new Form(Message.class).bindFromRequest();
 		if (!f.hasErrors()) {
 			Message data = f.get();
@@ -42,10 +41,9 @@ public class Application extends Controller {
 			data.save();
 			return redirect("/");
 		} else {
-			return badRequest(add.render("ERROR", f));
+//			return badRequest(add.render("ERROR", f));
+			return redirect("/");
 		}
-		*/
-		return redirect("/");
 	}
 
 	// Membet Action =================
