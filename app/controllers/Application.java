@@ -2,9 +2,12 @@ package controllers;
 
 import java.util.*;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import models.*;
 import play.*;
 import play.data.*;
+import play.libs.Json;
 import play.mvc.*;
 import scala.Tuple2;
 import views.html.*;
@@ -20,6 +23,22 @@ public class Application extends Controller {
 		List<Message> msgs = Message.find.all();
 		return ok(index.render("please set form.", msgs));
 	}
+
+	// JSONデータの作成
+	public static Result ajax(){
+		String input = request().body().asFormUrlEncoded().get("input")[0];
+		ObjectNode result = Json.newObject();
+		if(input == null){
+			result.put("status", "BAD");
+			result.put("message", "Can't get sending data...");
+			return badRequest(result);
+		} else{
+			result.put("status", "OK");
+			result.put("message", input);
+			return ok(result);
+		}
+	}
+
 	// Message Action =================
 	// 新規投稿フォームのAction
 	public static Result add() {
