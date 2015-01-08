@@ -6,11 +6,18 @@ $(function(){
 		$.post("/ajax",
 				jsondata,
 				function(result){
-					var res = "status:" + result.status +
-								", message:" + result.message;
+					var nm = result.getElementsByTagName("name").item(0);
+					var nm_txt = nm.childNodes[0].data;
+					var ml = result.getElementsByTagName("mail").item(0);
+					var ml_txt = ml.childNodes[0].data;
+					var tl = result.getElementsByTagName("tel").item(0);
+					var tl_txt = tl.childNodes[0].data;
+
+					var res = "name:" + nm_txt + ", mail:" + ml_txt +
+							", tel:" + tl_txt;
 					$("#message").text(res);
 				},
-				"json"
+				"xml"
 		);
 	})
 })
