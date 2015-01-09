@@ -1,23 +1,17 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.*;
-
-import play.mvc.*;
-import play.test.*;
-import play.data.DynamicForm;
-import play.data.validation.ValidationError;
-import play.data.validation.Constraints.RequiredValidator;
-import play.i18n.Lang;
-import play.libs.F;
-import play.libs.F.*;
-import play.twirl.api.Content;
-
-import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.*;
+import static play.test.Helpers.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import models.Member;
+import models.Message;
+
+import org.junit.Test;
+
+import play.twirl.api.Content;
+import play.data.Form;
 
 
 /**
@@ -27,18 +21,48 @@ import static org.fest.assertions.Assertions.*;
 *
 */
 public class ApplicationTest {
+	List<Member> dummy_mems = null;
+	List<Message> dummy_msgs = null;
 
-    @Test
-    public void simpleCheck() {
-        int a = 1 + 1;
-        assertThat(a).isEqualTo(2);
-    }
+	public ApplicationTest(){
+		inintialData();
+	}
+
+	// ダミーデータの準備
+	public void inintialData(){
+		dummy_mems = new ArrayList();
+		Member member = new Member();
+		member.id = 10001L;
+		member.name = "dummy_name";
+		member.mail = "dummy@mail";
+		member.tel = "000000";
+		dummy_mems.add(member);
+
+		dummy_msgs = new ArrayList();
+		Message message = new Message();
+		message.id = 10002L;
+		message.name = member.name;
+		message.member = member;
+		message.postdate = new Date();
+		member.messages = new ArrayList<Message>();
+		member.messages.add(message);
+		dummy_msgs.add(message);
+	}
 
     @Test
     public void renderTemplate() {
-        Content html = views.html.index.render("Your new application is ready.");
-        assertThat(contentType(html)).isEqualTo("text/html");
-        assertThat(contentAsString(html)).contains("Your new application is ready.");
+    	String msg = "テストメッセージ";
+    	Content add = views.html.add.render(msg, new Form(Message.class));
+        assertThat(contentAsString(add)).contains(msg);
+    }
+
+    @Test
+    public void renderTemplate2() {
+    	String msg = "テストメッセージ";
+    	Content index = views.html.index.render(msg, dummy_msgs);
+    	assertThat(contentType(index)).isEqualTo("text/html");
+    	assertThat(contentAsString(index)).contains(msg);
+    	assertThat(contentAsString(index)).contains(dummy_msgs.get(0).message);
     }
 
 

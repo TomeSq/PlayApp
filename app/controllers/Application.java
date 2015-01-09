@@ -33,7 +33,7 @@ public class Application extends Controller {
 	// ルートにアクセスした際のAction
 	public static Result index(){
 		List<Message> msgs = Message.find.all();
-		return ok(index.render("please set form.", msgs));
+		return ok(index.render("投稿メッセージ", msgs));
 	}
 
 	// Message Action =================

@@ -29,7 +29,6 @@ public class Member extends Model {
 	@Email(message="メールアドレスを記入ください。")
 	public String mail;
 
-	@Pattern(message="半角数値のみで記入してください。(-[ハイフン]不要)", value="[0-9]+")
 	public String tel;
 
 	@OneToMany(cascade=CascadeType.ALL)
